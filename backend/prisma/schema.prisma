@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account?
+  holdings  Holding[]
+  orders    Order[]
+  positions Position[]
+  fundTransactions FundTransaction[]
+}
+
+model Account {
+  id            Int      @id @default(autoincrement())
+  availableCash Float    @default(100000)
+  usedMargin    Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Holding {
+  id        Int      @id @default(autoincrement())
+  name      String
+  qty       Int
+  avg       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  name      String
+  qty       Int
+  price     Float
+  mode      OrderMode
+  product   String      @default("DELIVERY")
+  status    OrderStatus @default(EXECUTED)
+  createdAt DateTime    @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Position {
+  id        Int      @id @default(autoincrement())
+  product   String   @default("INTRADAY")
+  name      String
+  qty       Int
+  avg       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name, product])
+  @@index([userId])
+}
+
+model Stock {
+  id            Int      @id @default(autoincrement())
+  symbol        String   @unique
+  companyName   String
+  exchange      String   @default("NSE")
+
+  price         Float
+  previousClose Float
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model FundTransaction {
+  id        Int                 @id @default(autoincrement())
+  amount    Float
+  type      FundTransactionType
+  createdAt DateTime            @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum FundTransactionType {
+  DEPOSIT
+  WITHDRAWAL
+}
+
+enum OrderMode {
+  BUY
+  SELL
+}
+
+enum OrderStatus {
+  PENDING
+  EXECUTED
+  REJECTED
+  CANCELLED
+}
