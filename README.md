@@ -310,7 +310,7 @@ VITE_DASHBOARD_URL=http://localhost:5173
 ### 1. Clone the repository
 
 ```bash
-git clone YOUR_REPOSITORY_URL
+git clone https://github.com/Siddhesh-h/TradeX.git
 cd TradeX
 ```
 
