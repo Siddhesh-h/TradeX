@@ -12,6 +12,8 @@ import {
     TrendingUp,
     Wallet,
 } from "lucide-react";
+const API_URL = import.meta.env.VITE_API_URL;
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL;
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -38,7 +40,7 @@ const Login = () => {
             setError("");
 
             const response = await axios.post(
-                "http://localhost:3002/api/auth/login",
+                `${API_URL}/auth/login`,
                 formData,
                 {
                     withCredentials: true,
@@ -52,7 +54,7 @@ const Login = () => {
               so use its actual development URL here.
             */
 
-            window.location.href = "http://localhost:5173";
+            window.location.href = DASHBOARD_URL;
         } catch (error) {
             setError(
                 error.response?.data?.message || "Invalid email or password",

@@ -11,6 +11,7 @@ import {
     Mail,
     User,
 } from "lucide-react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -39,13 +40,9 @@ const Signup = () => {
             setLoading(true);
             setError("");
 
-            await axios.post(
-                "http://localhost:3002/api/auth/signup",
-                formData,
-                {
-                    withCredentials: true,
-                },
-            );
+            await axios.post(`${API_URL}/auth/signup`, formData, {
+                withCredentials: true,
+            });
 
             navigate("/login");
         } catch (error) {
