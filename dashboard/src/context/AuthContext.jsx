@@ -4,7 +4,7 @@ import api from "../services/api";
 
 const AuthContext = createContext(null);
 
-const LANDING_LOGIN_URL = "http://localhost:5174/login";
+const LANDING_LOGIN_URL = import.meta.env.VITE_LANDING_LOGIN_URL;
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);

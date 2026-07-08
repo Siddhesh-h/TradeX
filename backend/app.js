@@ -14,9 +14,13 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 const app = express();
 
+const allowedOrigins = process.env.CLIENT_URLS
+    ? process.env.CLIENT_URLS.split(",")
+    : ["http://localhost:5173", "http://localhost:5174"];
+
 app.use(
     cors({
-        origin: ["http://localhost:5173", "http://localhost:5174"],
+        origin: allowedOrigins,
         credentials: true,
     }),
 );
